@@ -1,9 +1,9 @@
 from django.shortcuts import render
 
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,renderer_classes
 from rest_framework.response import Response 
-from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 
 from .models import Entry
 
@@ -13,6 +13,7 @@ from .serializers import EntrySerializer
 # Create your views here.
 
 @api_view(['GET', 'POST'])
+@renderer_classes((JSONRenderer, ))
 def entryListAPI(request):
 	if request.method == 'GET':
 		entries = Entry.objects.all()
@@ -30,6 +31,8 @@ def entryListAPI(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
+
+@renderer_classes((JSONRenderer, ))
 def entryDetailAPI(request, id):
 	try:
 		entry = Entry.objects.get(pk=id)
