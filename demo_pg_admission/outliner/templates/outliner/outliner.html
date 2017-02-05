@@ -12,64 +12,145 @@
                                      user-scalable=no"> 
     <meta name="author" content="Akash Gaurav">
 
-
 </head>
 <body>
-	<div class="container">
+	<div class="container" >
 		<div class="row" style="position: relative; margin-top: 5rem">
-			<div class="col-lg-4" style="color: gray;">Bre>ad>Crumb</div>
+			
+			<div class="col-lg-4" style="color: gray;">
+				{%if isNotStartingPage%}
+					{% if entry.parent %}
+						<a href="{% url 'entryDetail' entry.parent %}">Back</a>	
+					{% else %}
+						<a href="{% url 'entryList' %}">Home</a>	
+					{%endif%}
+
+				{%endif%}	
+			</div>
 			<div class="col-lg-4" style="color: gray;text-align: center;">
-				<p>Created : date</p>
-				<p>Modified : date</p>
+				<!-- {%if isNotStartingPage%}
+				<p>Created : {{ entry.created | date:"D d M Y"}}</p>
+				<p>Modified : {{entry.updated|date:"DATETIME_FORMAT" }}</p>
+				{%endif%} -->
 			</div>
 			<div style="float:right">
-			  <button class="btn btn-danger">Delete</button>
+			 {%if isNotStartingPage%}
+			 <form action="{% url 'entryDetail' entry.id %}" method="POST">
+			 {% csrf_token %}
+			 <input type="hidden" name="heading" value="{{entry.heading}}_deleted">
+			  <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+			  </form>
+			 {%endif%} 
             </div>
 		</div>
+
 		<div class="row" style="text-align: center;">
-			<strong><h1>Heading</h1></strong>				
+			<strong><h1 id="heading">{{entry.heading}}</h1></strong>
 		</div>
+
 		<div class="row" style="word-wrap: break-word;width: auto;">
    			<div class="col-lg-10">				
-				<p>TextTextTextTextText TextTextTex  tTextText TextTextTextTextTextTextTextTextTextTex tTextTextTextTex  tTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTe  xtTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTe xtTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextText</p>
+				<p>{{entry.text}}</p>				
 			</div>
 			<div class="col-lg-2">
-				<div style="float:right; float: bottom">
-				  <button class="btn btn-primary btn-sm">Edit</button>
+				<div style="float:right; margin-bottom: 5rem;">
+				  {%if isNotStartingPage%}
+				  <button id="editButton" class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#editEntry">Edit</button>
+				  {%endif%}
 	            </div>
 			</div>
 		</div>
+		
+		
 		<div class="row">
 			<div class="panel panel-default">
 			  <table class="table table-bordered table-hover table-responsive">
+			  {% for childEntry in entries %}
 			    <tr><td>
-			    	<a href=""> Cras justo odio</a>
+			    	<a href="{% url 'entryDetail' childEntry.id %}"> {{childEntry.heading}}</a>
 			    	<div style="float:right">
-				    	<button class="btn btn-sm btn-danger">X</button>
-				    	</div>
+			    	<form action="{% url 'entryDetail' childEntry.id %}" method="POST">
+						 {% csrf_token %}
+						 <input type="hidden" name="heading" value="{{childEntry.heading}}_deleted">
+						  <button type="submit" class="btn btn-danger btn-sm">X</button>
+						  </form>
+			    	</div>
 			    </tr></td>
-			    <tr><td>
-			    	Cras justo odio
-			    	<div style="float:right">
-				    	<button class="btn btn-sm btn-danger">X</button>
-				    	</div>
-			    </tr></td>
-			    <tr><td>
-			    	Cras justo odio
-			    	<div style="float:right">
-				    	<button class="btn btn-sm btn-danger">X</button>
-				    	</div>
-			    </tr></td>
+			    {%endfor%}
 			    </table>
 			</div>
 		</div>
 		<div class="row">
 			<div style="float:right">
-			  <button class="btn btn-success">Add More</button>
+			  <button class="btn btn-success btn-sm"   data-toggle="modal" data-target="#addEntry">Add</button>
             </div>
-		</div>
-	
+		</div>	
 	</div>
+
+{%if isNotStartingPage%}	
+<!-- Modal -->
+<div id="editEntry" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+    <form action="{% url 'entryDetail' entry.id %}" method="POST">
+    {% csrf_token %}
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <form>
+        <h4 class="modal-title" style="text-align: center;">
+			<input id="inputHeading" type="text" name="heading" placeholder="{{entry.heading}}" style="border: none;">
+		</h4>
+      </div>
+      <div class="modal-body">
+        <textarea id="inputText" name="text" placeholder="{{entry.text}}" style="border: none; width:100%"></textarea>
+      </div>
+      
+      <div class="modal-footer">      
+	      <button type="submit">Done</button>        		
+      </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+{%endif%}
+
+
+<!-- Modal -->
+<div id="addEntry" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+    <form action="{% url 'entryList' %}" method="POST">
+    {% csrf_token %}
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <form>
+        <h4 class="modal-title" style="text-align: center;">
+			<input id="inputHeading" type="text" name="heading" placeholder="Heading" style="border: none;">
+		</h4>
+      </div>
+      <div class="modal-body">
+        <textarea id="inputText" name="text" placeholder="Text" style="border: none; width:100%"></textarea>
+      </div>
+
+      <div class="modal-footer">      
+	      <button type="submit">Done</button>        		
+      </div>
+      {%if isNotStartingPage%}
+      <input type="hidden" name="parent" value="{{entry.id}}">
+	  {%endif%}
+      </form>
+    </div>
+
+  </div>
+</div>
+
+
+	
 	<script src="/static/outliner/js/jquery-3.1.1.min.js"></script>
 	<script src="/static/outliner/js/bootstrap.min.js"></script>
 
