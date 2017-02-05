@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>Edit Pofile</title>
+  <link href="/static/userProfile/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/userProfile/favicon.ico" rel="icon" type="image/x-icon">
+  <meta name="viewport" content="width=device-width,  
+                                     initial-scale=1.0,  
+                                     maximum-scale=1.0,  
+                                     user-scalable=no"> 
+ <meta name="author" content="Akash Gaurav">
+
+  
+  <script language="javascript">
+
+  function validateInput(){
+  	var valid = true;
+
+  	var name      = document.getElementById("name").value;
+  	var email     = document.getElementById("email").value;
+  	var address   = document.getElementById("address").value;
+  	var age       = document.getElementById("age").value;
+  	var mobile    = document.getElementById("mobile").value;
+  	var boardX    = document.getElementById("boardX").value;
+  	var streamX   = document.getElementById("streamX").value;
+  	var boardXII  = document.getElementById("boardXII").value;
+  	var streamXII = document.getElementById("streamXII").value;
+  	var college   = document.getElementById("college").value;
+  	var course    = document.getElementById("course").value;
+
+  	if(name==='')  		    {alert("Name can't be blank");valid=false;}  		
+  	if(email==='')  		{alert("Email can't be blank");valid=false;}  		
+  	if(address==='')  		{alert("Address can't be blank"); valid=false;} 		
+  	if(boardX==='')  		{alert("Std X board can't be blank"); valid=false;} 		
+  	if(boardXII==='')  		{alert("Std XII board can't be blank");valid=false;}  		
+  	if(streamX==='')  		{alert("Std X stream can't be blank");valid=false;}  		
+  	if(streamXII==='')  	{alert("Std XII stream can't be blank"); valid=false;} 	
+  	if(college==='')  		{alert("College can't be blank");valid=false;}  	
+  	if(course==='')  		{alert("Course can't be blank"); valid=false;} 		
+  	
+  	
+  	if(!document.getElementById("male").checked && !document.getElementById("female".checked)) {
+  		alert("Gender can't be blank");
+  		valid=false;
+  	} 
+
+  	if(age.value<18 || age.value>60) {
+  		alert("Age must be between 18 and 16");
+  		valid=false;
+  	}
+  	
+
+  	if (mobile.value<7000000000 || mobile.value>9999999999) {
+  		alert("Mobile number is invalid")
+  		valid=false;
+  	}
+
+  	if (valid) document.getElementById("inputForm").submit();
+  }	
+
+
+  var rowCount = 1;
+    function addMore() {
+    	rowCount++;
+    	table = document.getElementById("eca");
+    	var newRow = table.insertRow(-1);
+
+		var cell1 = newRow.insertCell(0);
+		var cell2 = newRow.insertCell(1);
+		var cell3 = newRow.insertCell(2);
+
+		cell1.innerHTML = "<td><input class=\"form-control\" type=\"text\" name=\"activity"+(rowCount)+"\"/></td>";
+		cell2.innerHTML = "<td><input class=\"form-control\" type=\"text\" name=\"yearActivity"+(rowCount)+"\"/></td>";
+		cell3.innerHTML = "<td><input class=\"form-control\" type=\"text\" name=\"resultActivity"+(rowCount)+"\"/></td>";		
+    }
+  </script>
+
+</head>
+
+<body>
+<div class="container" style="margin-top:2em;">
+	<h1 class="text-info">Please fill up the form below</h1>
+	
+	<form id="inputForm" role="form" action= "{% url 'user:save' 1 %} " method= "post" onsubmit="event.preventDefault();validateInput();">
+{% csrf_token %}
+	<div class="form-group"> 
+	<label for="name">
+			Name :
+		</label>
+		<input class="form-control" id="name" type="text"  name= "name" maxlength="50" /></br>
+	</div>
+
+	<div class="form-group"> 			
+		    Gender :
+		<label for="male">
+		<input id="male" type="radio"  name= "gender" value="male" />
+		Male
+		</label>
+		
+		<label for="female">
+		<input id="female" type="radio"  name= "gender" value="female" />
+		Female
+		</label></br>
+	</div>
+	
+	<div class="form-group"> 	
+		<label for="age">
+			Age :
+		</label>
+		<input class="form-control" id="age" type="tel"  name= "age" /></br>
+	</div>	
+
+	<div class="form-group"> 	
+		<label for="mobile">
+			Mobile Number :
+		</label>
+		<div class="input-group"> 
+         <span class="input-group-addon">+91</span> 
+         <input class="form-control" id="mobile" type="tel"  name= "mobile" /></div></br>
+    </div>	
+	
+	<div class="form-group"> 	
+		<label for="email">
+			Email :
+		</label>
+		<input class="form-control" id="email" type="email"  name= "email" /></br>
+	</div>	
+	
+	<div class="form-group"> 		
+		<label for="address">
+			Address :
+		</label>
+		<textarea class="form-control" id="address" name= "address" ></textarea></br>
+	</div>	
+	
+	<div class="form-group"> 	
+
+		<fieldset>
+		<div class="table-responsive"> 
+			<table class="table table-bordered table-hover table-responsive">
+				<caption>Education</caption>
+				<thead>
+					<th></th>
+					<th>Board/College</th>
+					<th>Stream/Course</th>
+					<th>Marks/CGPA</th>
+					<th>Year</th>
+				</thead>
+				<tr>
+					<td>Std X</td>
+					<td><input id="boardX" class="form-control" type="text" name="XthBoard"/></td>
+					<td><input id="streamX" class="form-control" type="text" name="XthStream" /></td>
+					<td><input class="form-control" type="tel" name="XthMarks" /></td>
+					<td><input class="form-control" type="text" name="XthYear" /></td>
+				</tr>
+				<tr>
+					<td>Std XII</td>
+					<td><input id="boardXII" class="form-control" type="text" name="XIIthBoard"/></td>
+					<td><input id="streamXII" class="form-control" type="text" name="XIIthStream" /></td>
+					<td><input class="form-control" type="tel" name="XIIthMarks" /></td>
+					<td><input class="form-control" type="text" name="XIIthYear" /></td>
+				</tr>
+				<tr>
+					<td>Graduation</td>
+					<td><input id="college" class="form-control" type="text" name="College"/></td>
+					<td><input id="course" class="form-control" type="text" name="Course" /></td>
+					<td><input class="form-control" type="tel" name="CGPA" /></td>
+					<td><input class="form-control" type="text" name="GradYear" /></td>
+				</tr>
+			</table>
+			</div>
+			</div>
+		</fieldset>
+
+	
+	<div class="form-group"> 		
+		<fieldset>
+			<div class="table-responsive"> 
+			<table id="eca" class="table table-bordered table-hover table-responsive">
+				<caption>Extra curricular activities </caption>
+				<thead>
+					<th>Activity</th>
+					<th>Year</th>
+					<th>Award/Paticipation</th>
+				</thead>
+				<tr>
+					<td><input class="form-control" type="text" name="activity1"/></td>
+					<td><input class="form-control" type="text" name="yearActivity1"/></td>
+					<td><input class="form-control" type="text" name="resultActivity1"/></td>
+				</tr>
+			</table>
+				<button  class="btn btn-success" onClick="addMore(); return false;">+Add more</button>
+				</div>
+		</fieldset>
+		</div> 	
+		<button type="submit" class="btn btn-primary btn-block">Submit</button>
+		<!-- <input class="form-control" type= "submit" value= "Done" /> -->
+	</form>
+
+
+	</div>
+	<script src="/static/userProfile/js/jquery-3.1.1.min.js"></script>
+	<script src="/static/userProfile/js/bootstrap.min.js"></script>
+</body>
+</html>
