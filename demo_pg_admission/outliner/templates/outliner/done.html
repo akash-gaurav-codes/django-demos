@@ -1,0 +1,18 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Done</title>
+</head>
+<body>
+{% if error %}
+	<h1>{{error}}</h1>
+	<a href="{% url 'entryList' %}">Go Back</a>
+{% else %}	
+<h1>Your changes have been saved.</h1>
+<p>
+	<a href="{% url 'entryDetail' id %}">Go Back</a>
+</p>
+{%endif%}
+</body>
+</html>
