@@ -4,9 +4,9 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
-  <title>Edit Pofile</title>
-  <link href="/static/userProfile/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/static/userProfile/favicon.ico" rel="icon" type="image/x-icon">
+  <title>Admisson Form</title>
+  <link href="/static/admitForm/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/admitForm/favicon.ico" rel="icon" type="image/x-icon">
   <meta name="viewport" content="width=device-width,  
                                      initial-scale=1.0,  
                                      maximum-scale=1.0,  
@@ -17,7 +17,7 @@
   <script language="javascript">
 
   function validateInput(){
-  	var valid = true;
+  	var errorIn = "none";
 
   	var name      = document.getElementById("name").value;
   	var email     = document.getElementById("email").value;
@@ -31,37 +31,54 @@
   	var college   = document.getElementById("college").value;
   	var course    = document.getElementById("course").value;
 
-  	if(name==='')  		    {alert("Name can't be blank");valid=false;}  		
-  	if(email==='')  		{alert("Email can't be blank");valid=false;}  		
-  	if(address==='')  		{alert("Address can't be blank"); valid=false;} 		
-  	if(boardX==='')  		{alert("Std X board can't be blank"); valid=false;} 		
-  	if(boardXII==='')  		{alert("Std XII board can't be blank");valid=false;}  		
-  	if(streamX==='')  		{alert("Std X stream can't be blank");valid=false;}  		
-  	if(streamXII==='')  	{alert("Std XII stream can't be blank"); valid=false;} 	
-  	if(college==='')  		{alert("College can't be blank");valid=false;}  	
-  	if(course==='')  		{alert("Course can't be blank"); valid=false;} 		
+  	if(name==='')  		    	{errorIn = "name"}  		
+  	else if(age==='')  			{errorIn = "age"}  		
+  	else if(mobile==='')  		{errorIn = "mobile"}  			
+  	else if(email==='')  		{errorIn = "email"}  		
+  	else if(address==='')  		{errorIn = "address"} 		
+  	else if(boardX==='')  		{errorIn = "boardX"} 		
+  	else if(boardXII==='')  	{errorIn = "boardXII"}  		
+  	else if(streamX==='')  		{errorIn = "streamX"}  		
+  	else if(streamXII==='')  	{errorIn = "streamXII"} 	
+  	else if(college==='')  		{errorIn = "college"}  	
+  	else if(course==='')  		{errorIn = "course"} 		
   	
   	
-  	if(!document.getElementById("male").checked && !document.getElementById("female".checked)) {
-  		alert("Gender can't be blank");
-  		valid=false;
+  	// if gender isn't selected
+  	else if(!document.getElementById("male").checked && !document.getElementById("female").checked) {
+  		errorIn = "gender"
   	} 
 
-  	if(age.value<18 || age.value>60) {
-  		alert("Age must be between 18 and 16");
-  		valid=false;
+  	else if(age.value<18 || age.value>60) {
+  		errorIn = "age"
   	}
   	
 
-  	if (mobile.value<7000000000 || mobile.value>9999999999) {
-  		alert("Mobile number is invalid")
-  		valid=false;
+  	else if (mobile.value<7000000000 || mobile.value>9999999999) {
+  		errorIn = "mobile"
   	}
+  	
+  	if (errorIn =='none') document.getElementById("inputForm").submit();
+  	else {
+  		//hide all the error boxes 
+  		//and show only the relevant one
+  		var elements = document.getElementsByClassName("alert-danger"),
+  		i = elements.length;
+  		
+  		while(i--){
+  			elements[i].classList.add("hideBox");  			
+  		}
+  		
 
-  	if (valid) document.getElementById("inputForm").submit();
+  		var id = errorIn + "Error";
+  		document.getElementById(id).classList.remove("hideBox")
+  		
+  	}//end case incorrect input
   }	
 
 
+	//function to add more rows when the user clicks
+	//on add more in extra curricular activities section
   var rowCount = 1;
     function addMore() {
     	rowCount++;
@@ -78,19 +95,27 @@
     }
   </script>
 
+<style type="text/css">
+	.hideBox{
+		display: none;
+	}
+</style>
 </head>
 
 <body>
 <div class="container" style="margin-top:2em;">
-	<h1 class="text-info">Please fill up the form below</h1>
+	<h1 class="text-info">Please fill up your details below</h1>
 	
-	<form id="inputForm" role="form" action= "{% url 'user:save' 1 %} " method= "post" onsubmit="event.preventDefault();validateInput();">
-{% csrf_token %}
+	<form id="inputForm" role="form" action= "{% url 'save' %} " method= "post" onsubmit="event.preventDefault();validateInput();">
+	
+	{% csrf_token %}
+	
 	<div class="form-group"> 
 	<label for="name">
 			Name :
 		</label>
 		<input class="form-control" id="name" type="text"  name= "name" maxlength="50" /></br>
+		<div id ="nameError" class="hideBox alert alert-danger" role="alert">Please fill name correctly</div>
 	</div>
 
 	<div class="form-group"> 			
@@ -104,6 +129,7 @@
 		<input id="female" type="radio"  name= "gender" value="female" />
 		Female
 		</label></br>
+		<div id ="genderError" class="hideBox alert alert-danger" role="alert">Please choose gender </div>
 	</div>
 	
 	<div class="form-group"> 	
@@ -111,6 +137,7 @@
 			Age :
 		</label>
 		<input class="form-control" id="age" type="tel"  name= "age" /></br>
+		<div id ="ageError" class="hideBox alert alert-danger" role="alert">Please fill age correctly</div>
 	</div>	
 
 	<div class="form-group"> 	
@@ -119,7 +146,10 @@
 		</label>
 		<div class="input-group"> 
          <span class="input-group-addon">+91</span> 
-         <input class="form-control" id="mobile" type="tel"  name= "mobile" /></div></br>
+         <input class="form-control" id="mobile" type="tel"  name= "mobile" />
+         </div>
+         </br>
+		<div id ="mobileError" class="hideBox alert alert-danger" role="alert">Please fill mobile number correctly</div>
     </div>	
 	
 	<div class="form-group"> 	
@@ -127,6 +157,7 @@
 			Email :
 		</label>
 		<input class="form-control" id="email" type="email"  name= "email" /></br>
+		<div id ="emailError" class="hideBox alert alert-danger" role="alert">Please fill email correctly</div>
 	</div>	
 	
 	<div class="form-group"> 		
@@ -134,6 +165,7 @@
 			Address :
 		</label>
 		<textarea class="form-control" id="address" name= "address" ></textarea></br>
+		<div id ="addressError" class="hideBox alert alert-danger" role="alert">Please fill address correctly</div>
 	</div>	
 	
 	<div class="form-group"> 	
@@ -175,6 +207,18 @@
 			</div>
 		</fieldset>
 
+		<div id ="boardXError" class="hideBox alert alert-danger" role="alert">Please fill Std X board correctly</div>
+
+		<div id ="streamXError" class="hideBox alert alert-danger" role="alert">Please fill Std X stream correctly</div>
+
+		<div id ="boardXIIError" class="hideBox alert alert-danger" role="alert">Please fill Std XII board correctly</div>
+
+		<div id ="streamXIIError" class="hideBox alert alert-danger" role="alert">Please Std XII stream correctly</div>
+		
+		<div id ="collegeError" class="hideBox alert alert-danger" role="alert">Please fill college name correctly</div>
+
+		<div id ="courseError" class="hideBox alert alert-danger" role="alert">Please fill graduation course correctly</div>
+
 	
 	<div class="form-group"> 		
 		<fieldset>
@@ -202,7 +246,7 @@
 
 
 	</div>
-	<script src="/static/userProfile/js/jquery-3.1.1.min.js"></script>
-	<script src="/static/userProfile/js/bootstrap.min.js"></script>
+	<script src="/static/admitForm/js/jquery-3.1.1.min.js"></script>
+	<script src="/static/admitForm/js/bootstrap.min.js"></script>
 </body>
 </html>
